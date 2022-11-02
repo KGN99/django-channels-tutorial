@@ -58,7 +58,16 @@ TEMPLATES = [
     },
 ]
 
+#채널 레이어
 ASGI_APPLICATION = "justchat.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 WSGI_APPLICATION = "justchat.wsgi.application"
 
 
