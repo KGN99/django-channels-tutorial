@@ -15,3 +15,7 @@ class Message(models.Model):
     # 마지막 30번째 메시지까지 로드
     def last_30_messages(self):
         return Message.objects.order_by('-timestamp').all()[:30]
+
+    # 마지막 10번째 메시지까지 로드
+    def last_10_messages(self):
+        return Message.objects.order_by('-timestamp').all()[:10]
