@@ -14,3 +14,4 @@ def room(request, room_name):
         "room_name": mark_safe(json.dumps(room_name)),
         "username" : mark_safe(json.dumps(request.user.username)),
     })
+

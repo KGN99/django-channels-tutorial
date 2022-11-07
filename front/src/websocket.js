@@ -13,13 +13,18 @@ class WebSocketService {
   }
 
   connect() {
-    const path = "ws://127.0.0.1:8000/ws/chat/test";
+    const path = "ws://127.0.0.1:8000/ws/chat/test/";
     this.socketRef = new WebSocket(path);
     this.socketRef.onopen = () => {
       console.log("websocket open!");
     };
+    this.socketNewMessage(
+      JSON.stringify({
+        command: "fetch_messages",
+      })
+    );
     this.socketRef.onmessage = (e) => {
-      //sending a message
+      this.socketNewMessage(e.data);
     };
     this.socketRef.onerror = (e) => {
       console.log(e.message);
@@ -40,7 +45,7 @@ class WebSocketService {
       this.callbacks[command](parsedData.messages);
     }
     if (command === "new_message") {
-      this.callbacks[command](parseData.message);
+      this.callbacks[command](parsedData.message);
     }
   }
 
@@ -48,7 +53,7 @@ class WebSocketService {
     this.sendMessage({ command: "fetch_messages", usename: username });
   }
 
-  newChatMessages(message) {
+  newChatMessage(message) {
     this.sendMessage({
       command: "new_message",
       from: message.from,
@@ -56,8 +61,8 @@ class WebSocketService {
     });
   }
 
-  addCallbacks(messageCallback, newMessageCallback) {
-    this.callbacks["messages"] = messageCallback;
+  addCallbacks(messagesCallback, newMessageCallback) {
+    this.callbacks["messages"] = messagesCallback;
     this.callbacks["new_message"] = newMessageCallback;
   }
 
@@ -68,22 +73,8 @@ class WebSocketService {
       console.log(error.message);
     }
   }
-
-  waitForSocketConnection(callback) {
-    const socket = this.socketRef;
-    const recursion = this.waitForSocketConnection;
-    setTimeout(function () {
-      if (socket.readyState === 1) {
-        console.log("connection in secure");
-        if (callback != null) {
-          callback();
-        }
-        return;
-      } else {
-        console.log("waiting for connection...");
-        recursion(callback);
-      }
-    }, 1);
+  state() {
+    return this.socketRef.readyState;
   }
 }
 

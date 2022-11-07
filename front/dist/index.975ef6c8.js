@@ -2933,24 +2933,28 @@ var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
 var _chat = require("./containers/Chat");
 var _chatDefault = parcelHelpers.interopDefault(_chat);
-function App() {
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _chatDefault.default), {}, void 0, false, {
-        fileName: "src/App.js",
-        lineNumber: 4,
-        columnNumber: 10
-    }, this);
+var _websocket = require("./websocket");
+var _websocketDefault = parcelHelpers.interopDefault(_websocket);
+class App extends (0, _reactDefault.default).Component {
+    componentDidMount() {
+        (0, _websocketDefault.default).connect();
+    }
+    render() {
+        return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _chatDefault.default), {}, void 0, false, {
+            fileName: "src/App.js",
+            lineNumber: 9,
+            columnNumber: 12
+        }, this);
+    }
 }
 exports.default = App;
-_c = App;
-var _c;
-$RefreshReg$(_c, "App");
 
   $parcel$ReactRefreshHelpers$f00f.postlude(module);
 } finally {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","react":"21dqq","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react/jsx-dev-runtime":"iTorj","./containers/Chat":"84yvy"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","react":"21dqq","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react/jsx-dev-runtime":"iTorj","./containers/Chat":"84yvy","./websocket":"jYisH"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -5815,148 +5819,279 @@ var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
 var _sidepanel = require("./Sidepanel");
 var _sidepanelDefault = parcelHelpers.interopDefault(_sidepanel);
-function Chat() {
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        id: "frame",
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _sidepanelDefault.default), {}, void 0, false, {
-                fileName: "src/containers/Chat.js",
-                lineNumber: 5,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: "content",
-                children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                        className: "contact-profile",
-                        children: [
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
-                                src: "http://emilcarlsson.se/assets/harveyspecter.png",
-                                alt: ""
-                            }, void 0, false, {
-                                fileName: "src/containers/Chat.js",
-                                lineNumber: 8,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                                children: "username"
-                            }, void 0, false, {
-                                fileName: "src/containers/Chat.js",
-                                lineNumber: 9,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                className: "social-media",
-                                children: [
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
-                                        className: "fa fa-facebook",
-                                        "aria-hidden": "true"
-                                    }, void 0, false, {
-                                        fileName: "src/containers/Chat.js",
-                                        lineNumber: 11,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
-                                        className: "fa fa-twitter",
-                                        "aria-hidden": "true"
-                                    }, void 0, false, {
-                                        fileName: "src/containers/Chat.js",
-                                        lineNumber: 12,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
-                                        className: "fa fa-instagram",
-                                        "aria-hidden": "true"
-                                    }, void 0, false, {
-                                        fileName: "src/containers/Chat.js",
-                                        lineNumber: 13,
-                                        columnNumber: 13
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "src/containers/Chat.js",
-                                lineNumber: 10,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "src/containers/Chat.js",
-                        lineNumber: 7,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                        className: "message-input",
-                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                            className: "wrap",
+var _websocket = require("../websocket");
+var _websocketDefault = parcelHelpers.interopDefault(_websocket);
+function _defineProperty(obj, key, value) {
+    if (key in obj) Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+    });
+    else obj[key] = value;
+    return obj;
+}
+class Chat extends (0, _reactDefault.default).Component {
+    constructor(props){
+        super(props);
+        _defineProperty(this, "renderMessages", (messages)=>{
+            const currentUser = "admin";
+            return messages.map((message, i)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                    className: message.author === currentUser ? "sent" : "replies",
+                    children: [
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
+                            src: "http://emilcarlsson.se/assets/mikeross.png"
+                        }, void 0, false, {
+                            fileName: "src/containers/Chat.js",
+                            lineNumber: 11,
+                            columnNumber: 9
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                             children: [
-                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                    id: "chat-message-input",
-                                    type: "text",
-                                    placeholder: "Write your message..."
+                                message.content,
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                    fileName: "src/containers/Chat.js",
+                                    lineNumber: 14,
+                                    columnNumber: 11
+                                }, this),
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("small", {
+                                    className: message.author === currentUser ? "sent" : "replies",
+                                    children: [
+                                        Math.round((new Date().getTime() - new Date(message.timestamp).getTime()) / 60000),
+                                        " ",
+                                        "minutes ago"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "src/containers/Chat.js",
+                                    lineNumber: 15,
+                                    columnNumber: 11
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "src/containers/Chat.js",
+                            lineNumber: 12,
+                            columnNumber: 9
+                        }, this)
+                    ]
+                }, message.id, true, {
+                    fileName: "src/containers/Chat.js",
+                    lineNumber: 10,
+                    columnNumber: 43
+                }, this));
+        });
+        _defineProperty(this, "sendMessageHandler", (e)=>{
+            e.preventDefault();
+            const messageObject = {
+                from: "admin",
+                content: this.state.message
+            };
+            (0, _websocketDefault.default).newChatMessage(messageObject);
+            this.setState({
+                message: ""
+            });
+        });
+        _defineProperty(this, "messageChangeHandler", (e)=>{
+            this.setState({
+                message: e.target.value
+            });
+        });
+        this.state = {};
+        this.waitForSocketConnection(()=>{
+            (0, _websocketDefault.default).addCallbacks(this.setMessages.bind(this), this.addMessage.bind(this));
+            (0, _websocketDefault.default).fetchMessages(this.props.currentUser);
+        });
+    }
+    waitForSocketConnection(callback) {
+        const component = this;
+        setTimeout(function() {
+            if ((0, _websocketDefault.default).state() === 1) {
+                console.log("Connection is made");
+                callback();
+                return;
+            } else {
+                console.log("wait for connection...");
+                component.waitForSocketConnection(callback);
+            }
+        }, 100);
+    }
+    addMessage(message) {
+        this.setState({
+            messages: [
+                ...this.state.messages,
+                message
+            ]
+        });
+    }
+    setMessages(messages) {
+        this.setState({
+            messages: messages.reverse()
+        });
+    }
+    render() {
+        const messages = this.state.messages;
+        return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+            id: "frame",
+            children: [
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _sidepanelDefault.default), {}, void 0, false, {
+                    fileName: "src/containers/Chat.js",
+                    lineNumber: 70,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    className: "content",
+                    children: [
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                            className: "contact-profile",
+                            children: [
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
+                                    src: "http://emilcarlsson.se/assets/harveyspecter.png",
+                                    alt: ""
                                 }, void 0, false, {
                                     fileName: "src/containers/Chat.js",
-                                    lineNumber: 30,
+                                    lineNumber: 73,
                                     columnNumber: 13
                                 }, this),
-                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
-                                    className: "fa fa-paperclip attachment",
-                                    "aria-hidden": "true"
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                    children: "username"
                                 }, void 0, false, {
                                     fileName: "src/containers/Chat.js",
-                                    lineNumber: 31,
+                                    lineNumber: 74,
                                     columnNumber: 13
                                 }, this),
-                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                    id: "chat-message-submit",
-                                    className: "submit",
-                                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
-                                        className: "fa fa-paper-plane",
-                                        "aria-hidden": "true"
-                                    }, void 0, false, {
-                                        fileName: "src/containers/Chat.js",
-                                        lineNumber: 33,
-                                        columnNumber: 15
-                                    }, this)
-                                }, void 0, false, {
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                    className: "social-media",
+                                    children: [
+                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
+                                            className: "fa fa-facebook",
+                                            "aria-hidden": "true"
+                                        }, void 0, false, {
+                                            fileName: "src/containers/Chat.js",
+                                            lineNumber: 76,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
+                                            className: "fa fa-twitter",
+                                            "aria-hidden": "true"
+                                        }, void 0, false, {
+                                            fileName: "src/containers/Chat.js",
+                                            lineNumber: 77,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
+                                            className: "fa fa-instagram",
+                                            "aria-hidden": "true"
+                                        }, void 0, false, {
+                                            fileName: "src/containers/Chat.js",
+                                            lineNumber: 78,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
                                     fileName: "src/containers/Chat.js",
-                                    lineNumber: 32,
+                                    lineNumber: 75,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "src/containers/Chat.js",
-                            lineNumber: 29,
+                            lineNumber: 72,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                            className: "messages",
+                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                                id: "chat-log",
+                                children: messages && this.renderMessages(messages)
+                            }, void 0, false, {
+                                fileName: "src/containers/Chat.js",
+                                lineNumber: 82,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "src/containers/Chat.js",
+                            lineNumber: 81,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                            className: "message-input",
+                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                                onSubmit: this.sendMessageHandler,
+                                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                    className: "wrap",
+                                    children: [
+                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                            onChange: this.messageChangeHandler,
+                                            value: this.state.message || "",
+                                            id: "chat-message-input",
+                                            type: "text",
+                                            placeholder: "Write your message..."
+                                        }, void 0, false, {
+                                            fileName: "src/containers/Chat.js",
+                                            lineNumber: 87,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
+                                            className: "fa fa-paperclip attachment",
+                                            "aria-hidden": "true"
+                                        }, void 0, false, {
+                                            fileName: "src/containers/Chat.js",
+                                            lineNumber: 88,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                            id: "chat-message-submit",
+                                            className: "submit",
+                                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("i", {
+                                                className: "fa fa-paper-plane",
+                                                "aria-hidden": "true"
+                                            }, void 0, false, {
+                                                fileName: "src/containers/Chat.js",
+                                                lineNumber: 90,
+                                                columnNumber: 19
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "src/containers/Chat.js",
+                                            lineNumber: 89,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "src/containers/Chat.js",
+                                    lineNumber: 86,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "src/containers/Chat.js",
+                                lineNumber: 85,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "src/containers/Chat.js",
+                            lineNumber: 84,
                             columnNumber: 11
                         }, this)
-                    }, void 0, false, {
-                        fileName: "src/containers/Chat.js",
-                        lineNumber: 28,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "src/containers/Chat.js",
-                lineNumber: 6,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "src/containers/Chat.js",
-        lineNumber: 4,
-        columnNumber: 10
-    }, this);
+                    ]
+                }, void 0, true, {
+                    fileName: "src/containers/Chat.js",
+                    lineNumber: 71,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "src/containers/Chat.js",
+            lineNumber: 69,
+            columnNumber: 12
+        }, this);
+    }
 }
 exports.default = Chat;
-_c = Chat;
-var _c;
-$RefreshReg$(_c, "Chat");
 
   $parcel$ReactRefreshHelpers$fade.postlude(module);
 } finally {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Sidepanel":"dAf8K"}],"dAf8K":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Sidepanel":"dAf8K","../websocket":"jYisH"}],"dAf8K":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$2fc2 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -6367,7 +6502,90 @@ $RefreshReg$(_c, "Sidepanel");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"lOjBx":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"jYisH":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+function _defineProperty(obj, key, value) {
+    if (key in obj) Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+    });
+    else obj[key] = value;
+    return obj;
+}
+class WebSocketService {
+    static getInstance() {
+        if (!WebSocketService.instance) WebSocketService.instance = new WebSocketService();
+        return WebSocketService.instance;
+    }
+    constructor(){
+        _defineProperty(this, "callbacks", {});
+        this.socketRef = null;
+    }
+    connect() {
+        const path = "ws://127.0.0.1:8000/ws/chat/test/";
+        this.socketRef = new WebSocket(path);
+        this.socketRef.onopen = ()=>{
+            console.log("websocket open!");
+        };
+        this.socketNewMessage(JSON.stringify({
+            command: "fetch_messages"
+        }));
+        this.socketRef.onmessage = (e)=>{
+            this.socketNewMessage(e.data);
+        };
+        this.socketRef.onerror = (e)=>{
+            console.log(e.message);
+        };
+        this.socketRef.onclose = ()=>{
+            console.log("websocket is closed!");
+            this.connect();
+        };
+    }
+    socketNewMessage(data) {
+        const parsedData = JSON.parse(data);
+        const command = parsedData.command;
+        if (Object.keys(this.callbacks).length === 0) return;
+        if (command === "messages") this.callbacks[command](parsedData.messages);
+        if (command === "new_message") this.callbacks[command](parsedData.message);
+    }
+    fetchMessages(username) {
+        this.sendMessage({
+            command: "fetch_messages",
+            usename: username
+        });
+    }
+    newChatMessage(message) {
+        this.sendMessage({
+            command: "new_message",
+            from: message.from,
+            message: message.content
+        });
+    }
+    addCallbacks(messagesCallback, newMessageCallback) {
+        this.callbacks["messages"] = messagesCallback;
+        this.callbacks["new_message"] = newMessageCallback;
+    }
+    sendMessage(data) {
+        try {
+            this.socketRef.send(JSON.stringify({
+                ...data
+            }));
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+    state() {
+        return this.socketRef.readyState;
+    }
+}
+_defineProperty(WebSocketService, "instance", null);
+const WebSocketInstance = WebSocketService.getInstance();
+exports.default = WebSocketInstance;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lOjBx":[function(require,module,exports) {
 "use strict";
 var m = require("react-dom");
 var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;

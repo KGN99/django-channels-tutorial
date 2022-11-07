@@ -16,6 +16,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def message_to_json(self, message):
         return {
+            "id" : message.id,
             "author" : message.author.username,
             "content" : message.content,
             "timestamp" : str(message.timestamp)
@@ -24,6 +25,7 @@ class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
         messages = Message.last_10_messages()
         content = {
+            "command" : 'messages',
             "messages" : self.messages_to_json(messages)
         }
         self.send_message(content)
